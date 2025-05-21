@@ -1,19 +1,11 @@
+/*
+Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+
+*/
 package main
 
-import (
-	"fmt"
-)
+import "geoquiz/cmd"
 
-fmt.Print("----------------------------")
-fmt.Println("Welcome to the Geography Quiz Master")
-fmt.Print("----------------------------")
-
-fmt.Println("- Take quiz
-\n- Check Score
-\n- Quit")
-
-func main(){
-	int points := 0
-
-	fmt.Println("")
+func main() {
+	cmd.Execute()
 }
