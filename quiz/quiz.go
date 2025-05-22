@@ -1,6 +1,7 @@
 package quiz
 
 import (
+	"geoquiz/userstats"
 	"bufio"
 	"fmt"
 	"os"
@@ -27,12 +28,18 @@ func PlayGeoQuiz(questions []Questions) int{
 		
 		switch userInput {
 		case "1":
-			fmt.Printf("Starting quiz...\n")
-			playerScore = runQuiz(questions) 
+			fmt.Print("Enter your name: ")
+			scan.Scan()
+			name := strings.TrimSpace(scan.Text())
+
+			playerScore = runQuiz(questions)
+			userstats.SaveGame(name, playerScore)
+			fmt.Printf("Your score: %d correct answers!\n", playerScore)
+
 		case "2":
-			fmt.Printf("Your score: %d correct answers\n", playerScore)
+			userstats.ShowStats()
 		case "3":
-			fmt.Println(" Goodbye!")
+			fmt.Println("Fare thy well thanks for playing!")
 			return playerScore 
 		default:
 			fmt.Println("Please select a valid option (1, 2 or 3).")
