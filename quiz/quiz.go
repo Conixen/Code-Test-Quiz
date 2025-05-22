@@ -35,7 +35,9 @@ func PlayGeoQuiz(questions []Questions) int{
 			playerScore = runQuiz(questions)
 			userstats.SaveGame(name, playerScore)
 			fmt.Printf("Your score: %d correct answers!\n", playerScore)
-
+			
+			percentile := userstats.GetPercentile(playerScore)
+			fmt.Printf("You scored better than %d%% of all quizzers!\n", percentile)
 		case "2":
 			userstats.ShowStats()
 		case "3":
@@ -46,6 +48,7 @@ func PlayGeoQuiz(questions []Questions) int{
 		}
 	}
 }
+
 func runQuiz(questions []Questions) int {
 	scanner := bufio.NewScanner(os.Stdin)
 	score := 0

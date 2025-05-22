@@ -53,4 +53,9 @@ var GeographyQuiz = []Questions{
 		Alternatvs:		[]string{"Bulgaria", "Hungary", "Turkey", "France"}	,	
 		RightAnswear:	3,	// This is a hard one
 	},
+	{
+		Question: 		"What name did the newly elected pope get/take?",
+		Alternatvs: 	[]string{"Leo XIV", "Johannes III", "Benedict XVII", "John Paul III"},
+		RightAnswear: 	0, // Leo XIV	
+	},
 }
