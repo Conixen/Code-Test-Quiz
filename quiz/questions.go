@@ -33,8 +33,7 @@ var GeographyQuiz = []Questions{
 		RightAnswear: 	1, 	// Brussels
 	},
 	{
-		Question:		`Which country of 'Big Five' for the second year in a row. 
-						\nDid not get a single point in the 2025 Eurovison Song Contest finals?`,
+		Question:		"Which country of 'Big Five' for the second year in a row.\n Did not get a single point in the 2025 Eurovison Song Contest finals?",		// raw string input 
 		Alternatvs:		[]string{"UK", "Spain", "Germany", "France"},		
 		RightAnswear:	0,	// UK
 	},
