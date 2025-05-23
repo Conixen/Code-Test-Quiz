@@ -1,59 +1,78 @@
 package userstats
 
-import(
+import (
+	"encoding/json"
 	"fmt"
 	"os"
-	"encoding/json"
+	"sort"
 )
 
-type UserStats struct{
-	Name string
-	Points int
+type UserStats struct {
+	Name   string `json:"name"`
+	Points int    `json:"points"`
 }
 
 var QuizStats []UserStats
+
 const statsFile = "quiz_stats.json"
 
-	func SaveGame(name string, points int){
-	QuizStats = append (QuizStats, UserStats{
-		Name: name,
+func SaveGame(name string, points int) {
+	QuizStats = append(QuizStats, UserStats{
+		Name:   name,
 		Points: points,
 	})
 	SaveToFile()
 }
 
+func GetAllStats() []UserStats {
+	// Sortera från högst till lägst poäng
+	sortedStats := make([]UserStats, len(QuizStats))
+	copy(sortedStats, QuizStats)
+	
+	sort.Slice(sortedStats, func(i, j int) bool {
+		return sortedStats[i].Points > sortedStats[j].Points
+	})
+	
+	return sortedStats
+}
+
 func ShowStats() {
 	fmt.Println("All Players Highscore:")
 	fmt.Println("---------------------")
-
-	for i, stat := range QuizStats{
-		fmt.Printf("%d. %s - %d correct answers\n",i+1, stat.Name, stat.Points)
+	fmt.Println()
+	
+	sortedStats := GetAllStats()
+	
+	for i, stat := range sortedStats {
+		fmt.Printf("%d. %s - %d correct answers\n", i+1, stat.Name, stat.Points)
 	}
 	fmt.Println()
 }
 
-func GetPercentile(score int) int{
-	if len (QuizStats) == 0 {
-		return 0
+func GetPercentile(score int) int {
+	if len(QuizStats) <= 1 {
+		return 50 // Om det bara finns en spelare, returnera 50%
 	}
+	
 	betterThan := 0
 	for _, s := range QuizStats {
 		if score > s.Points {
 			betterThan++
 		}
 	}
-	percentile := (betterThan * 100) / len(QuizStats)
+	
+	percentile := (betterThan * 100) / (len(QuizStats) - 1) // -1 för att inte räkna sig själv
 	return percentile
 }
 
-func SaveToFile() {		//Method/function to save a json file for userstats
+func SaveToFile() {
 	file, err := os.Create(statsFile)
 	if err != nil {
 		fmt.Println("Could not save stats:", err)
 		return
 	}
 	defer file.Close()
-
+	
 	encoder := json.NewEncoder(file)
 	err = encoder.Encode(QuizStats)
 	if err != nil {
@@ -61,14 +80,13 @@ func SaveToFile() {		//Method/function to save a json file for userstats
 	}
 }
 
-
-func init() {   	// Method/function to read json file when program starts
+func init() {
 	file, err := os.Open(statsFile)
 	if err != nil {
-		return
+		return // Filen finns inte än, det är okej
 	}
 	defer file.Close()
-
+	
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&QuizStats)
 	if err != nil {
