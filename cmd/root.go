@@ -107,6 +107,9 @@ func showOriginalMenu() {
 	fmt.Println("Hello & Welcome to my Geography Quiz! :)")
 	fmt.Println("---------------------------------------")
 	
+	// Starta API server EN GÅNG i bakgrunden
+	serverStarted := false                    
+	
 	for {
 		fmt.Println()
 		fmt.Println("1. Play Quiz")
@@ -119,21 +122,22 @@ func showOriginalMenu() {
 		
 		switch userInput {
 		case "1":
-			// Starta API server i bakgrunden
-			go api.StartServer()
+			if !serverStarted {               
+				fmt.Println("Starting quiz server...")
+				go api.StartServer()
+				time.Sleep(2 * time.Second)
+				serverStarted = true          
+			}
 			
-			// Vänta lite så servern hinner starta
-			fmt.Println("Starting quiz server...")
-			time.Sleep(2 * time.Second)
-			
-			// Kör quiz via API
 			client.RunAPIQuiz()
 			
 		case "2":
-			// Starta API server för att hämta stats
-			go api.StartServer()
-			fmt.Println("Starting server to fetch stats...")
-			time.Sleep(2 * time.Second)
+			if !serverStarted {              
+				fmt.Println("Starting server to fetch stats...")
+				go api.StartServer()
+				time.Sleep(2 * time.Second)
+				serverStarted = true         
+			}
 			
 			client.ShowHighscores()
 			
