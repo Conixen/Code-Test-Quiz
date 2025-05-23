@@ -1,4 +1,4 @@
-// api/serverapi.go
+// serverapi.go
 package api
 
 import (
@@ -23,12 +23,12 @@ func StartServer() {
 	http.ListenAndServe(":8080", nil)
 }
 
-func handleQuestions(w http.ResponseWriter, r *http.Request) {
+func handleQuestions(w http.ResponseWriter, r *http.Request) {	// all questions as json
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(quiz.GeographyQuiz)
 }
 
-func handleSubmit(w http.ResponseWriter, r *http.Request) {
+func handleSubmit(w http.ResponseWriter, r *http.Request) {		// takes care of answears from client and updatees stats
 	w.Header().Set("Content-Type", "application/json")
 	
 	var ans Answer
@@ -38,7 +38,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	userstats.SaveGame(ans.Name, ans.Score)
+	userstats.SaveGame(ans.Name, ans.Score)	// save player stat
 	
 	response := map[string]interface{}{
 		"score":      ans.Score,
@@ -49,7 +49,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func handleStats(w http.ResponseWriter, r *http.Request) {
+func handleStats(w http.ResponseWriter, r *http.Request) { 	// send all player score 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(userstats.GetAllStats())
 }

@@ -10,10 +10,10 @@ import (
 	"geoquiz/api"
 	"geoquiz/client"
 )
-
+//---------------------------------------------------------------------------------------
 var rootCmd = &cobra.Command{
 	Use:   "geoquiz",
-	Short: "A fun geography quiz game with API backend",
+	Short: "A fun geography quiz game with CLI application with API backend",
 	Long: `Geography Quiz is a CLI application that lets you test your geography knowledge.
 The quiz uses a REST API backend to serve questions and track scores.
 
@@ -21,7 +21,7 @@ Available commands:
 - play: Start the geography quiz
 - highscore: View player rankings  
 - server: Start the API server manually
-- menu: Interactive menu (like the original quiz.go)`,
+- menu: Interactive menu`,
 }
 
 var playCmd = &cobra.Command{
@@ -29,16 +29,13 @@ var playCmd = &cobra.Command{
 	Short: "Start the geography quiz directly",
 	Long:  "Start playing the geography quiz directly. The API server will start automatically.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("🌍 Welcome to the Geography Quiz!")
+		fmt.Println("Welcome to the Geography Quiz!")
 		fmt.Println("Starting quiz server...")
 		
-		// Starta API server i bakgrunden
 		go api.StartServer()
 		
-		// Vänta så servern hinner starta
 		time.Sleep(2 * time.Second)
 		
-		// Kör quiz via API
 		client.RunAPIQuiz()
 	},
 }
@@ -48,12 +45,10 @@ var highscoreCmd = &cobra.Command{
 	Short: "View player rankings and statistics",
 	Long:  "Display the highscore table showing all players and their scores.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("📊 Loading highscores...")
+		fmt.Println("Loading highscores...")
 		
-		// Starta API server för att hämta stats
 		go api.StartServer()
 		
-		// Vänta så servern hinner starta  
 		time.Sleep(2 * time.Second)
 		
 		client.ShowHighscores()
@@ -65,20 +60,20 @@ var serverCmd = &cobra.Command{
 	Short: "Start the API server manually",
 	Long:  "Start the REST API server manually on port 8080. Useful for development.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("🚀 Starting API server...")
-		api.StartServer() // Detta blockerar
+		fmt.Println("Starting API server...")
+		api.StartServer() 
 	},
 }
 
-// DENNA ÄR DIN URSPRUNGLIGA MENY FRÅN quiz.go!
 var menuCmd = &cobra.Command{
 	Use:   "menu",
-	Short: "Interactive menu (original quiz.go style)",
+	Short: "Interactive menu",
 	Long:  "Shows the original interactive menu with numbered options.",
 	Run: func(cmd *cobra.Command, args []string) {
-		showOriginalMenu()
+		showMenu()
 	},
 }
+//---------------------------------------------------------------------------------------
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
@@ -88,27 +83,23 @@ func Execute() {
 }
 
 func init() {
-	// Lägg till subkommandona
 	rootCmd.AddCommand(playCmd)
 	rootCmd.AddCommand(highscoreCmd) 
 	rootCmd.AddCommand(serverCmd)
-	rootCmd.AddCommand(menuCmd)  // DIN URSPRUNGLIGA MENY!
+	rootCmd.AddCommand(menuCmd)  
 	
-	// Root command kör original meny som standard
 	rootCmd.Run = func(cmd *cobra.Command, args []string) {
-		showOriginalMenu()
+		showMenu()
 	}
 }
 
-// DIN URSPRUNGLIGA MENY FRÅN quiz.go - EXAKT SAMMA!
-func showOriginalMenu() {
+func showMenu() {
 	scanner := bufio.NewScanner(os.Stdin)
 	
 	fmt.Println("Hello & Welcome to my Geography Quiz! :)")
 	fmt.Println("---------------------------------------")
 	
-	// Starta API server EN GÅNG i bakgrunden
-	serverStarted := false                    
+	serverStarted := false		// no more crashing :)
 	
 	for {
 		fmt.Println()
@@ -122,7 +113,7 @@ func showOriginalMenu() {
 		
 		switch userInput {
 		case "1":
-			if !serverStarted {               
+			if !serverStarted {       	// makes sure it wont crash again
 				fmt.Println("Starting quiz server...")
 				go api.StartServer()
 				time.Sleep(2 * time.Second)
@@ -132,7 +123,7 @@ func showOriginalMenu() {
 			client.RunAPIQuiz()
 			
 		case "2":
-			if !serverStarted {              
+			if !serverStarted {        // makes sure it wont crash again
 				fmt.Println("Starting server to fetch stats...")
 				go api.StartServer()
 				time.Sleep(2 * time.Second)

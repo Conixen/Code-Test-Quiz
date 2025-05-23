@@ -1,4 +1,4 @@
-// client/clientapi.go
+// clientapi.go
 package client
 
 import (
@@ -26,18 +26,15 @@ type Stats struct {
 	Points int    `json:"points"`
 }
 
-func RunAPIQuiz() {
+func RunAPIQuiz() {		// Fetch quiz questions from the API
 	reader := bufio.NewReader(os.Stdin)
 	
-	// Vänta lite så API servern hinner starta
 	time.Sleep(1 * time.Second)
 	
-	// 1. Be användaren skriva namn
 	fmt.Print("Enter your name: ")
 	nameInput, _ := reader.ReadString('\n')
 	name := strings.TrimSpace(nameInput)
 	
-	// 2. Hämta frågor från API
 	resp, err := http.Get("http://localhost:8080/questions")
 	if err != nil {
 		log.Fatal("Could not fetch questions:", err)
@@ -51,7 +48,6 @@ func RunAPIQuiz() {
 	
 	score := 0
 	
-	// 3. Loop över frågor, fråga användaren och ge feedback direkt
 	for i, q := range questions {
 		fmt.Printf("\nQuestion %d: %s\n", i+1, q.Question)
 		for idx, option := range q.Options {
@@ -70,17 +66,16 @@ func RunAPIQuiz() {
 			}
 			
 			if answerNum-1 == q.Answer {
-				fmt.Println("✓ Correct!")
+				fmt.Println("Correct!")
 				score++
 			} else {
-				fmt.Printf("✗ Wrong! Correct answer: %s\n", q.Options[q.Answer])
+				fmt.Printf("Wrong! Correct answer: %s\n", q.Options[q.Answer])
 			}
+			time.Sleep(2 * time.Second)
 			break
 		}
 	}
-	
-	// 4. Skicka namn + poäng till API
-	payload := map[string]interface{}{
+	payload := map[string]interface{}{		// Sends final score to API
 		"name":  name,
 		"score": score,
 	}
@@ -88,7 +83,6 @@ func RunAPIQuiz() {
 	if err != nil {
 		log.Fatal("Failed to marshal result:", err)
 	}
-	
 	resp, err = http.Post("http://localhost:8080/submit", "application/json", bytes.NewBuffer(body))
 	if err != nil {
 		log.Fatal("Failed to send score:", err)
@@ -104,14 +98,13 @@ func RunAPIQuiz() {
 		log.Fatal("Failed to decode result:", err)
 	}
 	
-	// 5. Visa resultat
-	fmt.Printf("\n🎉 Quiz finished!\n")
+	fmt.Printf("\nQuiz finished!\n")
 	fmt.Printf("Your score: %d/%d\n", result.Score, result.Total)
 	fmt.Printf("You scored better than %d%% of all players!\n", result.Percentile)
+	time.Sleep(2 * time.Second)
 }
 
-func ShowHighscores() {
-	// Vänta lite så API servern hinner starta
+func ShowHighscores() {	    // Print all players score in order
 	time.Sleep(1 * time.Second)
 	
 	resp, err := http.Get("http://localhost:8080/stats")
@@ -127,7 +120,7 @@ func ShowHighscores() {
 		return
 	}
 	
-	fmt.Println("\n🏆 All Players Highscore:")
+	fmt.Println("\nAll Players Highscore:")
 	fmt.Println("------------------------")
 	
 	if len(stats) == 0 {

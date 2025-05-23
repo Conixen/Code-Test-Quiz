@@ -35,12 +35,12 @@ var GeographyQuiz = []Questions{
 	{
 		Id: 			"5",
 		Question: 		"Which European city has a famous peeing statue called 'Manneken Pis'?",
-		Options: 	[]string{"Amsterdam", "Brussels", "Vienna", "Prague"},
-		Answer: 	1, 	// Brussels
+		Options: 		[]string{"Amsterdam", "Brussels", "Vienna", "Prague"},
+		Answer: 		1, 	// Brussels
 	},
 	{
 		Id: 			"6",
-		Question:		"Which country of 'Big Five' for the second year in a row.\n Did not get a single point in the 2025 Eurovison Song Contest finals?",		// raw string input 
+		Question:		"Which country of 'Big Five' for the second year in a row.\nDid not get a single point in the 2025 Eurovison Song Contest finals?",		// raw string input 
 		Options:		[]string{"UK", "Spain", "Germany", "France"},		
 		Answer:			0,	// UK
 	},

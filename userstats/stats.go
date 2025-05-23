@@ -24,8 +24,7 @@ func SaveGame(name string, points int) {
 	SaveToFile()
 }
 
-func GetAllStats() []UserStats {
-	// Sortera från högst till lägst poäng
+func GetAllStats() []UserStats {	// show score in order
 	sortedStats := make([]UserStats, len(QuizStats))
 	copy(sortedStats, QuizStats)
 	
@@ -50,9 +49,6 @@ func ShowStats() {
 }
 
 func GetPercentile(score int) int {
-	if len(QuizStats) <= 1 {
-		return 50 // Om det bara finns en spelare, returnera 50%
-	}
 	
 	betterThan := 0
 	for _, s := range QuizStats {
@@ -61,11 +57,11 @@ func GetPercentile(score int) int {
 		}
 	}
 	
-	percentile := (betterThan * 100) / (len(QuizStats) - 1) // -1 för att inte räkna sig själv
+	percentile := (betterThan * 100) / (len(QuizStats) - 1) 
 	return percentile
 }
 
-func SaveToFile() {
+func SaveToFile() {		// save quiz run
 	file, err := os.Create(statsFile)
 	if err != nil {
 		fmt.Println("Could not save stats:", err)
@@ -83,7 +79,7 @@ func SaveToFile() {
 func init() {
 	file, err := os.Open(statsFile)
 	if err != nil {
-		return // Filen finns inte än, det är okej
+		return 
 	}
 	defer file.Close()
 	
